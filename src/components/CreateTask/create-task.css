@@ -1,0 +1,13 @@
+.task-form {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.add-task-title {
+    text-align: center;
+    border-bottom: 1px solid grey;
+    background-color: cornflowerblue;
+    padding: 0.5rem 1rem;
+}
