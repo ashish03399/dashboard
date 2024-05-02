@@ -4,17 +4,35 @@ import CreateColumn from "../../components/CreateColumn/CreateColumn";
 import CreateTask from "../../components/CreateTask/CreateTask";
 import { useEffect, useMemo, useState } from "react";
 import AddEditTask from "../AddEditTask/AddEditTask";
-import React from 'react';
+import React from "react";
 import GroupTask from "../../components/GroupTask/GroupTask";
-import { WORKFLOW_RULES, STATE as COLUMN_TITLE, getFields } from "../../rules/rules";
+import {
+  WORKFLOW_RULES,
+  STATE as COLUMN_TITLE,
+  getFields,
+} from "../../rules/rules";
 import Filter from "../../components/Filter/Filter";
 
 export default function Dashboard() {
-  const { filteredTask, addFilter, addTask, updateTask, addColumn, deleteTask, moveTask, clearFilter, reqfieldError, setReqFieldError, checkAllMandateFields, selectedTask, setSelectedTask } = useTasks();
-  const [dargState, setDragState] = useState('');
+  const {
+    filteredTask,
+    addFilter,
+    addTask,
+    updateTask,
+    addColumn,
+    deleteTask,
+    moveTask,
+    clearFilter,
+    reqfieldError,
+    setReqFieldError,
+    checkAllMandateFields,
+    selectedTask,
+    setSelectedTask,
+  } = useTasks();
+  const [dargState, setDragState] = useState("");
   const [showModal, setShowModal] = useState(false);
-  
-  const columns = useMemo(() =>Object.keys(filteredTask), [filteredTask]);
+
+  const columns = useMemo(() => Object.keys(filteredTask), [filteredTask]);
 
   const handleTaskClick = (task) => {
     setSelectedTask(task);
@@ -22,53 +40,54 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    if(dargState && showModal === false){
-      setDragState('');
-      setReqFieldError('');
-      handDragTask(dargState, selectedTask)
+    if (dargState && showModal === false) {
+      setDragState("");
+      setReqFieldError("");
+      handDragTask(dargState, selectedTask);
     }
-  }, [selectedTask])
+  }, [selectedTask]);
 
-  
   const handDragTask = (newStage, task) => {
-    
     //refactoring we can pass task id and then fetch is from store/state instead of passing whole task
-    if(WORKFLOW_RULES[task.column].includes(newStage)){
-      if(checkAllMandateFields(task, newStage)){
-        moveTask(newStage, task)
+    if (WORKFLOW_RULES[task.column].includes(newStage)) {
+      if (checkAllMandateFields(task, newStage)) {
+        moveTask(newStage, task);
         setSelectedTask(task);
-      }else{
+      } else {
         setDragState(newStage);
         setShowModal(true);
         setSelectedTask(task);
       }
-    }else{
-      alert('Please follow provided workflow');
+    } else {
+      alert("Please follow provided workflow");
     }
-    
-  }
+  };
 
   const Columns = useMemo(() => Object.keys(COLUMN_TITLE), []);
 
   const filterTasks = (key, value) => {
     addFilter(key, value);
-  }
+  };
 
   const fields = getFields();
 
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1>Swimlane</h1>
       {/* TODO: create separate component for such action */}
-      <div style={{display: 'flex'}}>
+      <div style={{ display: "flex" }}>
         <CreateColumn onAddColumn={addColumn} />
-        <Filter taskFields={fields} filterTasks={filterTasks} clearFilter={clearFilter}/>
+        <Filter
+          taskFields={fields}
+          filterTasks={filterTasks}
+          clearFilter={clearFilter}
+        />
       </div>
       {showModal && (
         <AddEditTask
           task={selectedTask}
           updateTask={updateTask}
-          column={(selectedTask?.column || COLUMN_TITLE.TODO)}
+          column={selectedTask?.column || COLUMN_TITLE.TODO}
           setShowModal={setShowModal}
           newStage={dargState}
           reqfieldError={reqfieldError}
@@ -78,7 +97,13 @@ export default function Dashboard() {
         {Columns.map((status) => {
           return (
             <TaskColumn title={COLUMN_TITLE[status]} key={status}>
-              { COLUMN_TITLE[status] === COLUMN_TITLE.TODO ? <CreateTask column={COLUMN_TITLE[columns?.[status]]} addTask={addTask} columns={columns} /> : null }
+              {COLUMN_TITLE[status] === COLUMN_TITLE.TODO ? (
+                <CreateTask
+                  column={COLUMN_TITLE[columns?.[status]]}
+                  addTask={addTask}
+                  columns={columns}
+                />
+              ) : null}
               <GroupTask
                 status={COLUMN_TITLE[status]}
                 tasks={filteredTask[COLUMN_TITLE[status]]}
@@ -86,7 +111,6 @@ export default function Dashboard() {
                 handleTaskClick={handleTaskClick}
                 handDragTask={handDragTask}
               ></GroupTask>
-
             </TaskColumn>
           );
         })}
