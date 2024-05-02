@@ -2,7 +2,7 @@
   "name": "skelton-app",
   "version": "0.1.0",
   "private": false,
-  "homepage": "https://ashish03399.github.io/dashboard",
+  "homepage": "https://ashish03399.github.io/manage-task",
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.11.1",

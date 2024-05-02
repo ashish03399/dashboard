@@ -76,7 +76,7 @@ export default function Dashboard() {
       <h1>Swimlane</h1>
       {/* TODO: create separate component for such action */}
       <div style={{ display: "flex" }}>
-        <CreateColumn onAddColumn={addColumn} />
+        {/* <CreateColumn onAddColumn={addColumn} /> */}
         <Filter
           taskFields={fields}
           filterTasks={filterTasks}
